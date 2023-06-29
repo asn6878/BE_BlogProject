@@ -1,6 +1,5 @@
 from pathlib import Path
-import os, json
-from django.core.exceptions import ImproperlyConfigured
+import os, mysettings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,19 +8,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-SECRET_FILE = os.path.join(BASE_DIR, 'mysettings.json')
-with open(SECRET_FILE) as f:
-    SECRETS = json.loads(f.read())
+SECRET_FILE = mysettings.SECRET_KEY
 
-def get_secret(setting, secrets=SECRETS):
-    try:
-        return secrets[setting]
-    except KeyError:
-        error_msg = f"Set the {setting} envorinment variable"
-        raise ImproperlyConfigured(error_msg)
-
-SECRET_KEY = get_secret("SECRET_KEY")
-
+SECRET_KEY = mysettings.
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -74,12 +63,7 @@ WSGI_APPLICATION = 'main_drf.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = mysettings.DATABASES
 
 
 # Password validation
