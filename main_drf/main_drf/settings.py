@@ -25,6 +25,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework', # rest_framework 앱 추가
+    'blog',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -82,6 +84,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# 커스텀 유저모델 선언
+AUTH_USER_MODEL = 'user.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
