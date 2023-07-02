@@ -3,11 +3,11 @@ from user.models import CustomUser as User
 import datetime
 
 class Blog(models.Model):
+    blog_img = models.ImageField(null=True)
     title = models.CharField(max_length=50)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    blog_description = models.CharField(max_length=200)
     created_time = models.DateTimeField('date created')
-    blog_profile = models.CharField(max_length=200)
-
     def __str__(self):
         return self.title
 
@@ -32,11 +32,9 @@ class Post(models.Model):
     body = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
-    like = models.IntegerField(default=0)
-    dislike = models.IntegerField(default=0)
     content_img = models.ImageField(null=True)
-    content_file = models.FileField(null=True)
-
+    likes = models.ManyToManyField(User, related_name='post_like') # 게시글 좋아요 중개 테이블
+    
     def __str__(self):
         return self.title
 
@@ -45,15 +43,14 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment = models.TextField()
     date = models.DateTimeField(auto_now_add=True) # 날짜
-    likes = models.IntegerField(default=0) # 좋아요
-    dislikes = models.IntegerField(default=0) # 싫어요
+    likes = models.ManyToManyField(User, related_name='comment_like') # 댓글 좋아요 중개 테이블
 
     def __str__(self):
         return self.comment
 
 class Tag(models.Model): # 게시글에 달리는 태그(해시태그)
     tag = models.CharField(max_length=30)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    blog = models.ManyToManyField(Post, related_name='tags')
 
     def __str__(self):
         return self.tag
