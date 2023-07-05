@@ -18,6 +18,7 @@ mysettings.py
 __pycache__/
 *.pyc
 __init__.py
+migrations/
 # mysettings.py 는 DB 정보 및 비밀키가 포함되어 있는 공간입니다.
 
 # End of https://www.toptal.com/developers/gitignore/api/venv
