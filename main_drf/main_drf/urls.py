@@ -15,9 +15,9 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
     openapi.Info(
-        title='프로젝트 이름',
-        default_version='프로젝트 버전',
-        description='API Doc 설명',
+        title='Toy_Project_Blog',
+        default_version='0.0',
+        description='이번 블로그 토이프로젝트에 사용될 API 문서입니다.',
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="a@a.com"),     # 부가 정보
         license=openapi.License(name="test")
