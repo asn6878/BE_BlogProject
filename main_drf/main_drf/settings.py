@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'rest_framework', # rest_framework 앱 추가
     'blog',
     'user',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
