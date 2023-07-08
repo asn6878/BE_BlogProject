@@ -44,9 +44,18 @@ class UserView(APIView):
             }, status = status.HTTP_400_BAD_REQUEST
         )
     
+
+# id 를 사용한 user 조회
+class UserDetailView(APIView):
+    def get(self, request, pk):
+        user_data = User.objects.get(id = pk)
+        user_serializer = UserSerializer(user_data)
+
+        return Response(user_serializer.data, status= status.HTTP_200_OK)
+    
     # user 수정
     def put(self, request, pk):
-        user_data = User.objects.get(pk)
+        user_data = User.objects.get(id = pk)
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -55,14 +64,6 @@ class UserView(APIView):
     
     # user 삭제
     def delete(self, request, pk):
-        user_data = User.objects.get(pk)
+        user_data = User.objects.get(id = pk)
         user_data.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
- 
-# id 를 사용한 user 조회
-class UserDetailView(APIView):
-    def get(self, request, pk):
-        user_data = User.objects.get(id = pk)
-        user_serializer = UserSerializer(user_data)
-
-        return Response(user_serializer.data, status= status.HTTP_200_OK)
