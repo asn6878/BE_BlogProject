@@ -5,13 +5,13 @@ class UserManager(BaseUserManager):
     
     use_in_migrations = True    
     
-    def create_user(self, email, nickname, password=None):
+    def create_user(self, email, username, password=None):
         
         if not email :
             raise ValueError('must have user email')
         user = self.model(
             email = self.normalize_email(email),
-            username = nickname
+            username = username
         )        
         user.set_password(password)
         user.save(using=self._db) 
@@ -33,7 +33,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     # 사용자 관련된 필드 및 기본 권한 값
-    username = models.CharField(max_length=255, unique=True, verbose_name='nickname')
+    username = models.CharField(max_length=255, unique=True, verbose_name='username')
     email = models.EmailField(max_length=255, unique=True, verbose_name='email')
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True)
 

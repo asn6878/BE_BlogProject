@@ -15,7 +15,7 @@ from drf_yasg.utils import swagger_auto_schema
 from .swaggers import CustomUserBodySerializer
 
 class UserView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     # user 리스트 조회
     def get(self, request):
@@ -43,20 +43,21 @@ class UserView(APIView):
                 'message' : "인풋 값 확인 요망",
             }, status = status.HTTP_400_BAD_REQUEST
         )
+    
 
 # id 를 사용한 user 조회
 class UserDetailView(APIView):
+    permission_classes = [AllowAny]
     def get(self, request, pk):
         user_data = User.objects.get(id = pk)
         user_serializer = UserSerializer(user_data)
 
         return Response(user_serializer.data, status= status.HTTP_200_OK)
-
-
+    
+# id 를 사용한 user 수정 및 삭제
 class UserDetailManagementView(APIView):
     permission_classes = [IsAuthenticated]
-
-        # user 수정
+    # user 수정
     def put(self, request, pk):
         user_data = User.objects.get(id = pk)
         serializer = UserSerializer(data=request.data)
@@ -70,5 +71,3 @@ class UserDetailManagementView(APIView):
         user_data = User.objects.get(id = pk)
         user_data.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
