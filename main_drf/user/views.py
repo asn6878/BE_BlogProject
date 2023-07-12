@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # drf 관련 모듈
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -43,7 +43,6 @@ class UserView(APIView):
                 'message' : "인풋 값 확인 요망",
             }, status = status.HTTP_400_BAD_REQUEST
         )
-    
 
 # id 를 사용한 user 조회
 class UserDetailView(APIView):
@@ -52,8 +51,12 @@ class UserDetailView(APIView):
         user_serializer = UserSerializer(user_data)
 
         return Response(user_serializer.data, status= status.HTTP_200_OK)
-    
-    # user 수정
+
+
+class UserDetailManagementView(APIView):
+    permission_classes = [IsAuthenticated]
+
+        # user 수정
     def put(self, request, pk):
         user_data = User.objects.get(id = pk)
         serializer = UserSerializer(data=request.data)
@@ -64,8 +67,8 @@ class UserDetailView(APIView):
     
     # user 삭제
     def delete(self, request, pk):
-        print(request)
-        print(dir(request))
         user_data = User.objects.get(id = pk)
         user_data.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+

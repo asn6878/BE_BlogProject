@@ -5,12 +5,12 @@ from . import models
 class UserAdmin(admin.ModelAdmin):
 
     list_display = (
-        'nickname',
+        'username',
         'email',
         'date_joined',
     )
 
     list_display_links = (
-        'nickname',
+        'username',
         'email',
     )
