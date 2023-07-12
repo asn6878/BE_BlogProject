@@ -5,9 +5,10 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from django.http import JsonResponse
 
 # 모델 및 시리얼라이저 관련 모듈
-from .serializers import UserSerializer, UserListSerializer
+from .serializers import UserSerializer, UserListSerializer, EmailFindSerializer, IdSerializer
 from .models import CustomUser as User
 
 # swagger Request Params 관련 모듈
@@ -15,10 +16,9 @@ from drf_yasg.utils import swagger_auto_schema
 from .swaggers import CustomUserBodySerializer
 
 class UserView(APIView):
-    permission_classes = [IsAuthenticated]
-
     # user 리스트 조회
     def get(self, request):
+        permission_classes = [IsAuthenticated]
         user_data_list = User.objects.all()
         serializer = UserListSerializer(user_data_list, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -26,6 +26,7 @@ class UserView(APIView):
     # user 생성
     @swagger_auto_schema(request_body=CustomUserBodySerializer)
     def post(self, request):
+        permission_classes = [IsAuthenticated]
         user_serializer = UserSerializer(data = request.data)
 
         if (user_serializer.is_valid()):
@@ -39,7 +40,7 @@ class UserView(APIView):
             )      
         return Response(
             {
-                'errors':user_serializer.errors,
+                'errors': user_serializer.errors,
                 'message' : "인풋 값 확인 요망",
             }, status = status.HTTP_400_BAD_REQUEST
         )
@@ -48,6 +49,7 @@ class UserView(APIView):
 # id 를 사용한 user 조회
 class UserDetailView(APIView):
     permission_classes = [AllowAny]
+    
     def get(self, request, pk):
         user_data = User.objects.get(id = pk)
         user_serializer = UserSerializer(user_data)
@@ -57,6 +59,7 @@ class UserDetailView(APIView):
 # id 를 사용한 user 수정 및 삭제
 class UserDetailManagementView(APIView):
     permission_classes = [IsAuthenticated]
+
     # user 수정
     def put(self, request, pk):
         user_data = User.objects.get(id = pk)
@@ -71,3 +74,21 @@ class UserDetailManagementView(APIView):
         user_data = User.objects.get(id = pk)
         user_data.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# 이메일로 아이디 찾기
+class EmailFindView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = EmailFindSerializer(data=request.data)
+        if serializer.is_valid():
+            if User.objects.filter(email = serializer.data['email']).exists():
+                user_id = User.objects.get(email = serializer.data['email']).username
+                response_data = JsonResponse(user_id)
+                return Response(response_data, status=status.HTTP_200_OK)
+            else :
+                response_data = JsonResponse({
+                        "message" : "해당 이메일로 가입된 아이디가 없습니다."
+                    })
+                return Response(response_data, status=status.HTTP_400_BAD_REQUEST
+                )

@@ -8,12 +8,30 @@ class UserSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = '__all__'
 
-#
+# User List Serializer
 class UserListSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         model = CustomUser
         fields = [
             'id',
             'username',
-            'nickname'
+            'email',
+            'date_joined'
+        ]
+
+# 이메일로 아이디 찾는 Serializer
+class EmailFindSerializer(serializers.ModelSerializer):
+    # Email
+    class Meta:
+        model = CustomUser
+        fields = [
+            'email'
+        ]
+
+class IdSerializer(serializers.ModelSerializer):
+    # Email
+    class Meta:
+        model = CustomUser
+        fields = [
+            'username'
         ]
