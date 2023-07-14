@@ -80,15 +80,17 @@ class EmailFindView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = EmailFindSerializer(data=request.data)
+        serializer = EmailFindSerializer(data= request.data)
         if serializer.is_valid():
-            if User.objects.filter(email = serializer.data['email']).exists():
-                user_id = User.objects.get(email = serializer.data['email']).username
-                response_data = JsonResponse(user_id)
-                return Response(response_data, status=status.HTTP_200_OK)
+            if User.objects.filter(email = request.data['email']).exists():
+                user_id = User.objects.get(email = request.data['email'])
+                response_serializer = IdSerializer(user_id)
+                return Response(response_serializer.data, status=status.HTTP_200_OK)
             else :
-                response_data = JsonResponse({
-                        "message" : "해당 이메일로 가입된 아이디가 없습니다."
-                    })
-                return Response(response_data, status=status.HTTP_400_BAD_REQUEST
-                )
+                return Response({
+                    "error_message" : "해당 이메일로 가입된 아이디가 없습니다."
+                }, status=status.HTTP_400_BAD_REQUEST)
+        else :
+            print("님 데이터셋 valid 하지 않은데요")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        

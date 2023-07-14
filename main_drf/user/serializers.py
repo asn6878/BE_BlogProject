@@ -20,16 +20,17 @@ class UserListSerializer(UserSerializer):
         ]
 
 # 이메일로 아이디 찾는 Serializer
-class EmailFindSerializer(serializers.ModelSerializer):
-    # Email
-    class Meta:
-        model = CustomUser
-        fields = [
-            'email'
-        ]
+class EmailFindSerializer(serializers.Serializer):
+    # 모델 시리얼라이저 썼을때
+    # class Meta:
+    #     model = CustomUser
+    #     fields = [
+    #         'email'
+    #     ]
+    email = serializers.EmailField()
+    
 
 class IdSerializer(serializers.ModelSerializer):
-    # Email
     class Meta:
         model = CustomUser
         fields = [
