@@ -154,4 +154,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+    ,
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 2,
+    # 이런 식으로 전체 페이지네이션 설정 가능함.
+    # 하지만, pagination.py 를 생성해 개별 페이지네이터를 적용해줄 예정임.
+    
+    # 'PAGE_SIZE': 3, 
 }

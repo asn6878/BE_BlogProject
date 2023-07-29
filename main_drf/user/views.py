@@ -15,10 +15,14 @@ from .models import CustomUser as User
 from drf_yasg.utils import swagger_auto_schema
 from .swaggers import CustomUserBodySerializer
 
+# Paginator
+from .pagination import UserPageNumberPagination
+
 class UserView(APIView):
     # user 리스트 조회
     def get(self, request):
         permission_classes = [IsAuthenticated]
+        pagination_class = UserPageNumberPagination
         user_data_list = User.objects.all()
         serializer = UserListSerializer(user_data_list, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
